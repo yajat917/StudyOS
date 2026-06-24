@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Analytics — StudyOS</title>
+  <link rel="stylesheet" href="css/style.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.9/dist/chart.umd.min.js"></script>
+</head>
+<body>
+  <nav class="navbar glass">
+    <a href="index.html" class="logo"><span class="icon">📚</span><span class="gradient-text">StudyOS</span></a>
+    <div class="nav-desktop nav-links">
+      <a href="index.html">Home</a><a href="dashboard.html">Dashboard</a><a href="planner.html">Planner</a>
+      <a href="focus.html">Focus</a><a href="analytics.html">Analytics</a><a href="doubt.html">Doubt</a><a href="profile.html">Profile</a>
+      <button class="theme-btn">🌙</button>
+    </div>
+    <div style="display:flex;align-items:center;gap:0.5rem">
+      <button class="theme-btn">🌙</button><button class="menu-btn">☰</button>
+    </div>
+    <div class="mobile-menu" style="width:100%">
+      <a href="index.html">Home</a><a href="dashboard.html">Dashboard</a><a href="planner.html">Planner</a>
+      <a href="focus.html">Focus</a><a href="analytics.html">Analytics</a><a href="doubt.html">Doubt</a><a href="profile.html">Profile</a>
+    </div>
+  </nav>
+
+  <main class="container">
+    <h1 class="page-title">Analytics</h1>
+    <p class="page-subtitle">Track your study patterns and analyze performance weaknesses.</p>
+
+    <div class="grid-3">
+      <div class="glass">
+        <div class="card-title"><span class="card-icon">⏱️</span> Total Hours</div>
+        <div class="stat-value indigo" id="total-hours">0h</div>
+      </div>
+      <div class="glass">
+        <div class="card-title"><span class="card-icon">📚</span> Subjects</div>
+        <div class="stat-value green" id="subject-count">0</div>
+      </div>
+      <div class="glass">
+        <div class="card-title"><span class="card-icon">⚡</span> XP Earned</div>
+        <div class="stat-value yellow" id="xp">0 XP</div>
+      </div>
+    </div>
+
+    <div class="grid-2" style="margin-top:1.5rem">
+      <div class="glass">
+        <div class="card-title"><span class="card-icon">📈</span> Study Hours (Daily)</div>
+        <div class="chart-box"><canvas id="line-chart"></canvas></div>
+      </div>
+      <div class="glass">
+        <div class="card-title"><span class="card-icon">🥧</span> Time by Subject</div>
+        <div class="chart-box"><canvas id="pie-chart"></canvas></div>
+      </div>
+    </div>
+
+    <div class="glass" style="margin-top:1.5rem">
+      <div class="card-title"><span class="card-icon">🔍</span> Weakness Analyzer</div>
+      <div id="alert" class="alert alert-error hidden"></div>
+      <div class="grid-3" id="marks-inputs"></div>
+      <button id="analyze-btn" class="btn btn-primary" style="margin-top:1rem">Analyze Weaknesses</button>
+      <div id="analysis-output" style="margin-top:1rem"></div>
+    </div>
+  </main>
+
+  <script src="js/storage.js"></script>
+  <script src="js/ai.js"></script>
+  <script src="js/analytics.js"></script>
+</body>
+</html>

@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Doubt Assistant — StudyOS</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <nav class="navbar glass">
+    <a href="index.html" class="logo"><span class="icon">📚</span><span class="gradient-text">StudyOS</span></a>
+    <div class="nav-desktop nav-links">
+      <a href="index.html">Home</a><a href="dashboard.html">Dashboard</a><a href="planner.html">Planner</a>
+      <a href="focus.html">Focus</a><a href="analytics.html">Analytics</a><a href="doubt.html">Doubt</a><a href="profile.html">Profile</a>
+      <button class="theme-btn">🌙</button>
+    </div>
+    <div style="display:flex;align-items:center;gap:0.5rem">
+      <button class="theme-btn">🌙</button><button class="menu-btn">☰</button>
+    </div>
+    <div class="mobile-menu" style="width:100%">
+      <a href="index.html">Home</a><a href="dashboard.html">Dashboard</a><a href="planner.html">Planner</a>
+      <a href="focus.html">Focus</a><a href="analytics.html">Analytics</a><a href="doubt.html">Doubt</a><a href="profile.html">Profile</a>
+    </div>
+  </nav>
+
+  <main class="container">
+    <h1 class="page-title">Doubt Assistant</h1>
+    <p class="page-subtitle">Ask any academic question and get clear AI-powered explanations.</p>
+
+    <div style="max-width:700px;margin:0 auto">
+      <div class="glass">
+        <div id="alert" class="alert alert-error hidden"></div>
+        <div class="chat-box" id="chat-box">
+          <p style="text-align:center;color:var(--muted)">No messages yet. Ask a question to get started!</p>
+        </div>
+        <form id="chat-form" style="display:flex; flex-direction:column; gap:0.75rem">
+          <div style="display:flex; gap:0.5rem; flex-wrap:wrap">
+            <select id="doubt-subject" class="input" style="flex: 1; min-width: 140px;">
+              <option value="Physics">Physics</option>
+              <option value="Chemistry">Chemistry</option>
+              <option value="Mathematics">Mathematics</option>
+              <option value="Biology">Biology</option>
+              <option value="English">English</option>
+            </select>
+            <input type="text" id="question" class="input" placeholder="Type your question..." autocomplete="off" style="flex: 3; min-width: 250px;">
+          </div>
+          <button type="submit" class="btn btn-primary btn-block">Ask AI</button>
+        </form>
+        <div class="suggestions">
+          <button class="suggestion-btn" data-q="Explain Newton's third law with examples.">Newton's 3rd law</button>
+          <button class="suggestion-btn" data-q="What is the difference between speed and velocity?">Speed vs velocity</button>
+          <button class="suggestion-btn" data-q="How does photosynthesis work?">Photosynthesis</button>
+          <button class="suggestion-btn" data-q="Explain the quadratic formula.">Quadratic formula</button>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script src="js/storage.js"></script>
+  <script src="js/ai.js"></script>
+  <script src="js/doubt.js"></script>
+</body>
+</html>

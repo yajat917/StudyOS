@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Planner — StudyOS</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <nav class="navbar glass">
+    <a href="index.html" class="logo"><span class="icon">📚</span><span class="gradient-text">StudyOS</span></a>
+    <div class="nav-desktop nav-links">
+      <a href="index.html">Home</a><a href="dashboard.html">Dashboard</a><a href="planner.html">Planner</a>
+      <a href="focus.html">Focus</a><a href="analytics.html">Analytics</a><a href="doubt.html">Doubt</a><a href="profile.html">Profile</a>
+      <button class="theme-btn">🌙</button>
+    </div>
+    <div style="display:flex;align-items:center;gap:0.5rem">
+      <button class="theme-btn">🌙</button><button class="menu-btn">☰</button>
+    </div>
+    <div class="mobile-menu" style="width:100%">
+      <a href="index.html">Home</a><a href="dashboard.html">Dashboard</a><a href="planner.html">Planner</a>
+      <a href="focus.html">Focus</a><a href="analytics.html">Analytics</a><a href="doubt.html">Doubt</a><a href="profile.html">Profile</a>
+    </div>
+  </nav>
+
+  <main class="container">
+    <h1 class="page-title">Smart Study Planner</h1>
+    <p class="page-subtitle">Generate a personalized AI study schedule based on your exam and weak areas.</p>
+
+    <div id="alert" class="alert alert-error hidden"></div>
+
+    <div class="grid-2">
+      <div class="glass">
+        <div class="card-title"><span class="card-icon">⚙️</span> Plan Settings</div>
+        <div class="form-group">
+          <label for="exam-date">Exam Date</label>
+          <input type="date" id="exam-date" class="input">
+        </div>
+        <div class="form-group">
+          <label>Subjects</label>
+          <div class="pills" id="subject-pills"></div>
+        </div>
+        <div class="form-group">
+          <label for="hours">Daily Hours: <span id="hours-val">3</span>h</label>
+          <input type="range" id="hours" min="1" max="8" value="3">
+        </div>
+        <div id="weak-topics"></div>
+        <button id="gen-plan" class="btn btn-primary btn-block">Generate Study Plan</button>
+      </div>
+      <div class="glass">
+        <div class="card-title"><span class="card-icon">📋</span> Your Plan</div>
+        <div id="plan-output">
+          <p style="color:var(--muted)">Your AI-generated study plan will appear here.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="glass" style="margin-top:2rem">
+      <div class="card-title"><span class="card-icon">📝</span> Revision Generator</div>
+      <div class="grid-2 rev-form">
+        <div class="form-group" style="margin:0">
+          <label for="rev-subject">Subject</label>
+          <select id="rev-subject" class="input"></select>
+        </div>
+        <div class="form-group" style="margin:0">
+          <label for="rev-chapter">Chapter</label>
+          <input type="text" id="rev-chapter" class="input" placeholder="e.g. Newton's Laws">
+        </div>
+      </div>
+      <button id="gen-revision" class="btn btn-primary" style="margin-top:1rem">Generate Notes</button>
+      <div id="revision-output" style="margin-top:1rem"></div>
+    </div>
+  </main>
+
+  <script src="js/storage.js"></script>
+  <script src="js/ai.js"></script>
+  <script src="js/planner.js"></script>
+</body>
+</html>

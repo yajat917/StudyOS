@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard — StudyOS</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <nav class="navbar glass">
+    <a href="index.html" class="logo"><span class="icon">📚</span><span class="gradient-text">StudyOS</span></a>
+    <div class="nav-desktop nav-links">
+      <a href="index.html">Home</a><a href="dashboard.html">Dashboard</a><a href="planner.html">Planner</a>
+      <a href="focus.html">Focus</a><a href="analytics.html">Analytics</a><a href="doubt.html">Doubt</a><a href="profile.html">Profile</a>
+      <button class="theme-btn">🌙</button>
+    </div>
+    <div style="display:flex;align-items:center;gap:0.5rem">
+      <button class="theme-btn">🌙</button><button class="menu-btn">☰</button>
+    </div>
+    <div class="mobile-menu" style="width:100%">
+      <a href="index.html">Home</a><a href="dashboard.html">Dashboard</a><a href="planner.html">Planner</a>
+      <a href="focus.html">Focus</a><a href="analytics.html">Analytics</a><a href="doubt.html">Doubt</a><a href="profile.html">Profile</a>
+    </div>
+  </nav>
+
+  <main class="container">
+    <h1 class="page-title" id="welcome">Welcome! 👋</h1>
+    <p class="page-subtitle">Here's your study overview for today.</p>
+
+    <!-- Stats Grid -->
+    <div class="grid-4">
+      <div class="glass">
+        <div class="card-title"><span class="card-icon">📅</span> Exam Countdown</div>
+        <div class="stat-value indigo" id="countdown">—</div>
+        <div class="stat-label" id="exam-label">Set exam date in Profile</div>
+      </div>
+      <div class="glass">
+        <div class="card-title"><span class="card-icon">⏱️</span> Weekly Hours</div>
+        <div class="stat-value green" id="weekly-hours">0h</div>
+        <div class="stat-label">Last 7 days</div>
+      </div>
+      <div class="glass">
+        <div class="card-title"><span class="card-icon">⚡</span> XP & Level</div>
+        <div class="stat-value yellow" id="xp">0 XP</div>
+        <div class="progress-bar"><div class="progress-fill" id="xp-bar" style="width:0%"></div></div>
+        <div class="stat-label" id="level-label" style="font-weight:600; margin-top:0.25rem">Beginner</div>
+      </div>
+      <div class="glass">
+        <div class="card-title"><span class="card-icon">🔥</span> Streak</div>
+        <div class="stat-value orange" id="streak">0 days</div>
+        <div class="stat-label">Keep it going!</div>
+      </div>
+    </div>
+
+    <!-- AI Performance Hub -->
+    <div class="grid-2" style="margin-top:1.5rem">
+      <!-- AI Study Score Card -->
+      <div class="glass score-card" style="display:flex; align-items:center; gap:1.5rem">
+        <div class="score-radial-wrap">
+          <svg width="120" height="120" viewBox="0 0 120 120" class="score-ring">
+            <circle cx="60" cy="60" r="50" fill="none" stroke="rgba(148,163,184,0.08)" stroke-width="8"/>
+            <circle id="score-fill" cx="60" cy="60" r="50" fill="none" stroke="url(#score-grad)" stroke-width="8"
+              stroke-linecap="round" stroke-dasharray="314.16" stroke-dashoffset="314.16"/>
+            <defs>
+              <linearGradient id="score-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#6366f1" />
+                <stop offset="100%" stop-color="#4ade80" />
+              </linearGradient>
+            </defs>
+          </svg>
+          <div class="score-display">
+            <span id="score-value">0</span><span class="score-max">/100</span>
+          </div>
+        </div>
+        <div style="flex:1">
+          <div class="card-title" style="margin-bottom:0.5rem"><span class="card-icon">🤖</span> AI Study Score</div>
+          <p id="score-comment" style="font-weight:600; font-size:1.05rem; color:var(--text); margin-bottom:0.35rem">Calculating...</p>
+          <p style="color:var(--muted); font-size:0.8rem; line-height:1.4">Score incorporates: weekly hours (40%), focus sessions (25%), task completion (20%), and subject balance (15%).</p>
+        </div>
+      </div>
+
+      <!-- AI Daily Insight Card -->
+      <div class="glass insight-card" style="display:flex; flex-direction:column; justify-content:space-between">
+        <div>
+          <div class="card-title" style="justify-content:space-between">
+            <div style="display:flex; align-items:center; gap:0.5rem">
+              <span class="card-icon">💡</span> AI Daily Insight
+            </div>
+            <button id="refresh-insight-btn" class="btn btn-secondary" style="padding:0.25rem 0.6rem; font-size:0.75rem; display:flex; align-items:center; gap:0.25rem">
+              <span>🔄</span> Refresh
+            </button>
+          </div>
+          <p id="insight-text" class="output-text" style="font-size:0.9rem; font-style:italic; line-height:1.5">Generating insights based on your learning patterns...</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Daily Workspace & Goals -->
+    <div class="grid-2" style="margin-top:1.5rem">
+      <!-- Goals Card -->
+      <div class="glass">
+        <div class="card-title" style="justify-content:space-between">
+          <div style="display:flex; align-items:center; gap:0.5rem">
+            <span class="card-icon">🎯</span> Today's Goals
+          </div>
+          <span class="badge earned" id="goals-count" style="margin:0">0/0</span>
+        </div>
+        
+        <div class="goals-list-wrap" id="goals-list" style="margin-bottom:1rem; display:flex; flex-direction:column; gap:0.6rem; max-height:220px; overflow-y:auto; padding-right:0.25rem">
+          <!-- Dynamically filled -->
+        </div>
+
+        <form id="goal-form" style="display:flex; gap:0.5rem">
+          <input type="text" id="goal-input" class="input" placeholder="Add a study goal..." required>
+          <button type="submit" class="btn btn-primary" style="padding:0.65rem 1rem">+</button>
+        </form>
+      </div>
+
+      <!-- Today's Study Plan Card -->
+      <div class="glass">
+        <div class="card-title"><span class="card-icon">📋</span> Today's Plan</div>
+        <pre class="output-text" id="today-plan" style="max-height: 220px; overflow-y: auto;">No plan yet. Visit Planner to create one.</pre>
+        <a href="planner.html" style="color:#818cf8;font-size:0.875rem;margin-top:0.75rem;display:inline-block">View full plan →</a>
+      </div>
+    </div>
+
+    <!-- Focus Tracker & Badges -->
+    <div class="grid-2" style="margin-top:1.5rem">
+      <!-- Focus Tracker Card -->
+      <div class="glass">
+        <div class="card-title"><span class="card-icon">⏱️</span> Today's Focus</div>
+        <div class="grid-2" style="gap:1rem">
+          <div class="glass" style="padding:1rem; background:rgba(15,23,42,0.2); text-align:center">
+            <div class="stat-value green" id="focus-sessions-completed">0</div>
+            <div class="stat-label">Sessions Completed</div>
+          </div>
+          <div class="glass" style="padding:1rem; background:rgba(15,23,42,0.2); text-align:center">
+            <div class="stat-value indigo" id="focus-time-completed">0m</div>
+            <div class="stat-label">Total Time</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Badges Card -->
+      <div class="glass">
+        <div class="card-title"><span class="card-icon">🏆</span> Badges</div>
+        <div id="badges"></div>
+        <p style="color:var(--muted);font-size:0.875rem;margin-top:1rem">Complete focus sessions and generate plans to earn badges.</p>
+      </div>
+    </div>
+
+    <div class="btn-group" style="margin-top: 2rem">
+      <a href="focus.html" class="btn btn-primary">Start Focus Session</a>
+      <a href="planner.html" class="btn btn-secondary">Generate Plan</a>
+    </div>
+  </main>
+
+  <script src="js/storage.js"></script>
+  <script src="js/ai.js"></script>
+  <script>
+    let cachedScore = 0;
+
+    document.addEventListener("DOMContentLoaded", () => {
+      // 1. Initial Load of Goals & Focus
+      initGoals();
+      
+      // 2. Render Dashboard stats
+      refreshDashboard();
+
+      // 3. Setup Insight refresh
+      document.getElementById("refresh-insight-btn").addEventListener("click", () => {
+        refreshInsight(true);
+      });
+
+      // 4. Goal Add Form
+      document.getElementById("goal-form").addEventListener("submit", (e) => {
+        e.preventDefault();
+        const input = document.getElementById("goal-input");
+        const val = input.value.trim();
+        if (val) {
+          addGoal(val);
+          input.value = "";
+        }
+      });
+    });
+
+    function refreshDashboard() {
+      const data = getData();
+
+      // Welcome name
+      if (data.profile?.name) {
+        document.getElementById("welcome").textContent = `Welcome, ${data.profile.name}! 👋`;
+      }
+
+      // Exam countdown
+      const countdown = getExamCountdown(data.profile?.examDate);
+      document.getElementById("countdown").textContent = countdown !== null ? `${countdown} days` : "—";
+      if (data.profile?.examDate) {
+        document.getElementById("exam-label").textContent = `Exam: ${data.profile.examDate}`;
+      }
+
+      // Weekly study hours
+      const weeklyHours = getWeeklyHours(data.studyLogs);
+      document.getElementById("weekly-hours").textContent = weeklyHours.toFixed(1) + "h";
+
+      // Streak
+      document.getElementById("streak").textContent = data.gamification.streak + " days";
+
+      // Gamification levels and XP progress
+      const xp = data.gamification.xp;
+      const { level, title } = getLevelInfo(xp);
+      document.getElementById("xp").textContent = `${xp} XP (Lvl ${level})`;
+      document.getElementById("level-label").textContent = title;
+      
+      // Calculate level progress (each level is 100 XP)
+      const currentLevelProgress = xp % 100;
+      document.getElementById("xp-bar").style.width = currentLevelProgress + "%";
+
+      // Badges
+      renderBadges(document.getElementById("badges"), data.gamification.badges);
+
+      // Study Plan snippet
+      if (data.studyPlan) {
+        // Strip out the demo tag if present, show nice summary
+        const cleanedPlan = data.studyPlan.replace(/\(Demo mode[^\)]*\)/g, "").trim();
+        document.getElementById("today-plan").textContent = cleanedPlan.split("\n").slice(0, 8).join("\n");
+      } else {
+        document.getElementById("today-plan").textContent = "No plan yet. Visit Planner to create one.";
+      }
+
+      // Today's Focus stats
+      const today = new Date().toISOString().split("T")[0];
+      const todayFocus = (data.focusHistory || []).filter(h => h.date === today);
+      const focusCount = todayFocus.length;
+      const focusTime = todayFocus.reduce((sum, h) => sum + h.duration, 0);
+      document.getElementById("focus-sessions-completed").textContent = focusCount;
+      document.getElementById("focus-time-completed").textContent = focusTime + "m";
+
+      // Render Goals List
+      renderGoals(data.goals);
+
+      // Calculate and render AI Study Score
+      updateStudyScore(data, weeklyHours, focusCount);
+
+      // Render Insight
+      renderInsight(data);
+    }
+
+    function initGoals() {
+      const data = getData();
+      const today = new Date().toISOString().split("T")[0];
+      const todayGoals = data.goals.filter(g => g.date === today);
+      
+      // If no goals exist for today, initialize with 3 demo goals as requested
+      if (todayGoals.length === 0 && data.goals.length === 0) {
+        const demoGoals = [
+          { id: "g-demo-1", text: "Complete Physics Chapter", completed: false, date: today },
+          { id: "g-demo-2", text: "Practice Maths Questions", completed: false, date: today },
+          { id: "g-demo-3", text: "Revise Chemistry Notes", completed: false, date: today }
+        ];
+        updateData({ goals: demoGoals });
+      }
+    }
+
+    function renderGoals(goals) {
+      const listEl = document.getElementById("goals-list");
+      const countEl = document.getElementById("goals-count");
+      const today = new Date().toISOString().split("T")[0];
+      const todayGoals = goals.filter(g => g.date === today);
+
+      if (todayGoals.length === 0) {
+        listEl.innerHTML = `<p style="color:var(--muted); font-size:0.875rem; text-align:center; padding:1rem">No goals set for today.</p>`;
+        countEl.textContent = "0/0";
+        return;
+      }
+
+      const completed = todayGoals.filter(g => g.completed).length;
+      countEl.textContent = `${completed}/${todayGoals.length}`;
+
+      listEl.innerHTML = todayGoals.map(g => `
+        <div class="goal-item">
+          <input type="checkbox" class="goal-checkbox" data-id="${g.id}" ${g.completed ? "checked" : ""}>
+          <span class="goal-text">${g.text}</span>
+          <button class="goal-delete" data-id="${g.id}">🗑️</button>
+        </div>
+      `).join("");
+
+      // Bind events
+      listEl.querySelectorAll(".goal-checkbox").forEach(box => {
+        box.addEventListener("change", (e) => {
+          toggleGoal(e.target.dataset.id, e.target.checked);
+        });
+      });
+
+      listEl.querySelectorAll(".goal-delete").forEach(btn => {
+        btn.addEventListener("click", (e) => {
+          deleteGoal(btn.dataset.id);
+        });
+      });
+    }
+
+    function addGoal(text) {
+      const data = getData();
+      const today = new Date().toISOString().split("T")[0];
+      const newGoal = {
+        id: "goal-" + Date.now() + "-" + Math.random().toString(36).substr(2, 4),
+        text: text,
+        completed: false,
+        date: today
+      };
+      
+      const nextGoals = [...data.goals, newGoal];
+      updateData({ goals: nextGoals });
+      
+      refreshDashboard();
+    }
+
+    function toggleGoal(id, completed) {
+      const data = getData();
+      const nextGoals = data.goals.map(g => {
+        if (g.id === id) {
+          return { ...g, completed: completed };
+        }
+        return g;
+      });
+
+      updateData({ goals: nextGoals });
+      
+      // Award XP or deduct XP on toggle check/uncheck
+      if (completed) {
+        addXP(10); // Complete task: +10 XP
+      } else {
+        // Safe XP deduction to prevent negative XP
+        const currentXP = data.gamification.xp;
+        const nextXP = Math.max(0, currentXP - 10);
+        updateData({
+          gamification: { ...data.gamification, xp: nextXP }
+        });
+      }
+
+      refreshDashboard();
+    }
+
+    function deleteGoal(id) {
+      const data = getData();
+      // If we are deleting a completed goal, let's make sure we don't cheat XP
+      const target = data.goals.find(g => g.id === id);
+      if (target && target.completed) {
+        const nextXP = Math.max(0, data.gamification.xp - 10);
+        updateData({
+          gamification: { ...data.gamification, xp: nextXP }
+        });
+      }
+
+      const nextGoals = data.goals.filter(g => g.id !== id);
+      updateData({ goals: nextGoals });
+      
+      refreshDashboard();
+    }
+
+    function updateStudyScore(data, weeklyHours, focusCount) {
+      const profile = data.profile;
+      const goals = data.goals || [];
+      const focusHistory = data.focusHistory || [];
+
+      const targetDailyHours = profile?.dailyHours || 3;
+      const targetWeeklyHours = targetDailyHours * 7;
+
+      // 1. Study hours completed (40%)
+      const hoursScore = Math.min(1.0, weeklyHours / targetWeeklyHours) * 40;
+
+      // 2. Focus sessions (25%)
+      // target: 5 sessions per week
+      const weekAgo = new Date();
+      weekAgo.setDate(weekAgo.getDate() - 7);
+      const weeklyFocusCount = focusHistory.filter(h => new Date(h.date) >= weekAgo).length;
+      const focusScore = Math.min(1.0, weeklyFocusCount / 5) * 25;
+
+      // 3. Task completion (20%)
+      const today = new Date().toISOString().split("T")[0];
+      const todayGoals = goals.filter(g => g.date === today);
+      let taskScore = 20; // baseline if no goals
+      if (todayGoals.length > 0) {
+        const completed = todayGoals.filter(g => g.completed).length;
+        taskScore = (completed / todayGoals.length) * 20;
+      }
+
+      // 4. Subject balance (15%)
+      const activeSubjects = profile?.subjects || ["Math", "Physics", "Chemistry"];
+      const subjectTotals = {};
+      data.studyLogs.filter(l => new Date(l.date) >= weekAgo).forEach((l) => {
+        subjectTotals[l.subject] = (subjectTotals[l.subject] || 0) + l.hours;
+      });
+      
+      let studiedCount = 0;
+      activeSubjects.forEach(s => {
+        if ((subjectTotals[s] || 0) >= 0.5) { // at least 30 mins
+          studiedCount++;
+        }
+      });
+      
+      const balanceScore = activeSubjects.length > 0 
+        ? (studiedCount / activeSubjects.length) * 15 
+        : 15;
+
+      const totalScore = Math.round(hoursScore + focusScore + taskScore + balanceScore);
+      cachedScore = totalScore;
+
+      // Render Radial Score Circle
+      document.getElementById("score-value").textContent = totalScore;
+      
+      const fillEl = document.getElementById("score-fill");
+      const strokeOffset = 314.16 * (1 - totalScore / 100);
+      fillEl.style.strokeDashoffset = strokeOffset;
+    }
+
+    function renderInsight(data) {
+      if (data.aiScoreCached && data.aiScoreCached.date === new Date().toISOString().split("T")[0]) {
+        document.getElementById("score-comment").textContent = data.aiScoreCached.comment;
+        document.getElementById("insight-text").innerHTML = data.aiScoreCached.insight;
+      } else {
+        // Need to load/generate initial insight
+        refreshInsight(false);
+      }
+    }
+
+    async function refreshInsight(forceAI = false) {
+      const data = getData();
+      const weekAgo = new Date();
+      weekAgo.setDate(weekAgo.getDate() - 7);
+
+      const weeklyHours = getWeeklyHours(data.studyLogs);
+      const focusCount = (data.focusHistory || []).filter(h => new Date(h.date) >= weekAgo).length;
+
+      const today = new Date().toISOString().split("T")[0];
+      const todayGoals = data.goals.filter(g => g.date === today);
+      const completedGoals = todayGoals.filter(g => g.completed).length;
+      
+      const subjectTotals = {};
+      data.studyLogs.filter(l => new Date(l.date) >= weekAgo).forEach((l) => {
+        subjectTotals[l.subject] = (subjectTotals[l.subject] || 0) + l.hours;
+      });
+
+      const weakSubjects = data.profile?.weaknesses || ["Physics"];
+
+      const textEl = document.getElementById("insight-text");
+      const commentEl = document.getElementById("score-comment");
+      const refreshBtn = document.getElementById("refresh-insight-btn");
+
+      commentEl.textContent = "Analyzing patterns...";
+      textEl.textContent = "AI is computing your daily recommendation...";
+      refreshBtn.disabled = true;
+
+      try {
+        let result;
+        if (forceAI) {
+          result = await generateDashboardInsight(
+            cachedScore, 
+            weeklyHours, 
+            focusCount, 
+            completedGoals, 
+            todayGoals.length, 
+            subjectTotals, 
+            weakSubjects
+          );
+        } else {
+          // Always use high-quality local fallback for offline/demo presentations
+          result = getDemoDashboardInsight(
+            cachedScore, 
+            weeklyHours, 
+            focusCount, 
+            completedGoals, 
+            todayGoals.length, 
+            subjectTotals, 
+            weakSubjects
+          );
+        }
+
+        commentEl.textContent = result.comment;
+        textEl.textContent = `"${result.insight}"`;
+
+        // Cache result in storage
+        updateData({
+          aiScoreCached: {
+            date: today,
+            comment: result.comment,
+            insight: result.insight
+          }
+        });
+
+      } catch (err) {
+        console.error(err);
+        commentEl.textContent = "Analytics Offline";
+        textEl.textContent = "AI service unavailable. Please try again.";
+      } finally {
+        refreshBtn.disabled = false;
+      }
+    }
+  </script>
+</body>
+</html>
