@@ -38,7 +38,6 @@ function getData() {
         studyLogs: parsed.studyLogs?.length ? parsed.studyLogs : SAMPLE_LOGS,
         studyPlan: parsed.studyPlan || "",
         gamification: { ...DEFAULT_GAMIFICATION, ...parsed.gamification },
-        apiKey: parsed.apiKey || "",
         goals: parsed.goals || [],
         focusHistory: parsed.focusHistory || [],
         aiScoreCached: parsed.aiScoreCached || null,
@@ -52,7 +51,6 @@ function getData() {
     studyLogs: SAMPLE_LOGS,
     studyPlan: "",
     gamification: { ...DEFAULT_GAMIFICATION },
-    apiKey: "",
     goals: [],
     focusHistory: [],
     aiScoreCached: null,
@@ -73,11 +71,8 @@ function updateData(partial) {
 function getLevelInfo(xp) {
   const level = Math.floor(xp / 100) + 1;
   let title = "Beginner";
-  if (level >= 10) {
-    title = "Study Master";
-  } else if (level >= 5) {
-    title = "Focused Learner";
-  }
+  if (level >= 10) title = "Study Master";
+  else if (level >= 5) title = "Focused Learner";
   return { level, title };
 }
 
@@ -98,28 +93,15 @@ function addXP(amount) {
 
   const xp = data.gamification.xp + amount;
   const badges = [...data.gamification.badges];
+  BADGES.forEach((b) => { if (xp >= b.xpRequired && !badges.includes(b.id)) badges.push(b.id); });
 
-  BADGES.forEach((b) => {
-    if (xp >= b.xpRequired && !badges.includes(b.id)) badges.push(b.id);
-  });
-
-  return updateData({
-    gamification: {
-      ...data.gamification,
-      xp,
-      streak,
-      lastStudyDate: today,
-      badges,
-    },
-  });
+  return updateData({ gamification: { ...data.gamification, xp, streak, lastStudyDate: today, badges } });
 }
 
 function getWeeklyHours(logs) {
   const weekAgo = new Date();
   weekAgo.setDate(weekAgo.getDate() - 7);
-  return logs
-    .filter((l) => new Date(l.date) >= weekAgo)
-    .reduce((sum, l) => sum + l.hours, 0);
+  return logs.filter((l) => new Date(l.date) >= weekAgo).reduce((sum, l) => sum + l.hours, 0);
 }
 
 function getExamCountdown(examDate) {
@@ -135,42 +117,26 @@ function showAlert(el, message, type = "error") {
   el.classList.remove("hidden");
 }
 
-function hideAlert(el) {
-  if (el) el.classList.add("hidden");
-}
+function hideAlert(el) { if (el) el.classList.add("hidden"); }
 
 function showSpinner(container, text = "Creating your personalized plan...") {
-  container.innerHTML = `
-    <div class="spinner-wrap loading-container">
-      <div class="ai-loader-icon">🤖</div>
-      <h3 class="loading-title">StudyOS AI is analyzing...</h3>
-      <p class="loading-subtitle">${text}</p>
-      <div class="loading-bar-wrap">
-        <div class="loading-bar-fill"></div>
-      </div>
-    </div>`;
+  container.innerHTML = `<div class="spinner-wrap loading-container"><div class="ai-loader-icon">🤖</div><h3 class="loading-title">StudyOS AI is analyzing...</h3><p class="loading-subtitle">${text}</p><div class="loading-bar-wrap"><div class="loading-bar-fill"></div></div></div>`;
 }
 
 function renderBadges(container, earnedIds) {
-  container.innerHTML = BADGES.map((b) => {
-    const earned = earnedIds.includes(b.id);
-    return `<span class="badge ${earned ? "earned" : "locked"}">${earned ? "✓" : "○"} ${b.name}</span>`;
-  }).join("");
+  container.innerHTML = BADGES.map((b) => `<span class="badge ${earnedIds.includes(b.id) ? "earned" : "locked"}">${earnedIds.includes(b.id) ? "✓" : "○"} ${b.name}</span>`).join("");
 }
 
 function initTheme() {
   const saved = localStorage.getItem("studyos-theme") || "dark";
   document.documentElement.setAttribute("data-theme", saved);
-
   document.querySelectorAll(".theme-btn").forEach((btn) => {
     btn.textContent = saved === "dark" ? "🌙" : "☀️";
     btn.addEventListener("click", () => {
       const next = document.documentElement.getAttribute("data-theme") === "dark" ? "light" : "dark";
       document.documentElement.setAttribute("data-theme", next);
       localStorage.setItem("studyos-theme", next);
-      document.querySelectorAll(".theme-btn").forEach((b) => {
-        b.textContent = next === "dark" ? "🌙" : "☀️";
-      });
+      document.querySelectorAll(".theme-btn").forEach((b) => { b.textContent = next === "dark" ? "🌙" : "☀️"; });
     });
   });
 }
@@ -179,11 +145,8 @@ function initNavbar() {
   const current = location.pathname.split("/").pop() || "index.html";
   document.querySelectorAll(".nav-links a, .mobile-menu a").forEach((link) => {
     const href = link.getAttribute("href");
-    if (href === current || (current === "" && href === "index.html")) {
-      link.classList.add("active");
-    }
+    if (href === current || (current === "" && href === "index.html")) link.classList.add("active");
   });
-
   const menuBtn = document.querySelector(".menu-btn");
   const mobileMenu = document.querySelector(".mobile-menu");
   if (menuBtn && mobileMenu) {
