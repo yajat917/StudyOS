@@ -47,7 +47,10 @@ async function generateStudyPlan(examDate, subjects, weakTopics, hours) {
   const weakStr = Object.entries(weakTopics).filter(([, topics]) => topics.length).map(([sub, topics]) => `${sub}: ${topics.join(", ")}`).join("; ") || "None specified";
   const daysUntil = Math.max(1, Math.ceil((new Date(examDate) - Date.now()) / 86400000));
   const planDays = Math.min(daysUntil, 14);
-  const prompt = `Create a ${planDays}-day study plan for subjects: ${subjects.join(", ")}.\nExam date: ${examDate}. Daily study hours: ${hours}.\nWeak topics to prioritize: ${weakStr}.\nFormat each range with subjects, topics, hours, and HIGH/MEDIUM/LOW priority.`;
+  const prompt = `Create a ${planDays}-day study plan for subjects: ${subjects.join(", ")}.
+Exam date: ${examDate}. Daily study hours: ${hours}.
+Weak topics to prioritize: ${weakStr}.
+Format each range with subjects, topics, hours, and HIGH/MEDIUM/LOW priority.`;
   return callOpenRouter([{ role: "system", content: "You are an AI study planner. Format plans clearly with day ranges, topics, hours, and priorities." }, { role: "user", content: prompt }], { temperature: 0.7, maxTokens: 900 });
 }
 
@@ -82,9 +85,12 @@ function getDemoDashboardInsight(score, weeklyHours, weeklyFocusCount, completed
 async function tryAI(fn, demoFn) {
   try { return await fn(); }
   catch (error) {
-    console.error("AI service error", { code: error.code, status: error.status });
-    const demoEligible = ["UPSTREAM_TIMEOUT", "UPSTREAM_NETWORK_ERROR", "CONFIGURATION_ERROR", "UPSTREAM_PROVIDER_ERROR"].includes(error.code);
+    const code = error && typeof error === "object" ? (error.code || "UNKNOWN_ERROR") : "UNKNOWN_ERROR";
+    const status = error && typeof error === "object" ? error.status : undefined;
+    console.error("AI service error", { code, status, message: error && error.message ? error.message : String(error) });
+    const demoEligible = ["UPSTREAM_TIMEOUT", "UPSTREAM_NETWORK_ERROR", "CONFIGURATION_ERROR", "UPSTREAM_PROVIDER_ERROR"].includes(code);
     if (demoEligible && typeof demoFn === "function") return demoFn();
-    throw error instanceof ApiError ? error : new Error("AI service unavailable. Please try again.");
+    if (error instanceof ApiError) throw error;
+    throw new Error("AI service unavailable. Please try again.");
   }
 }
